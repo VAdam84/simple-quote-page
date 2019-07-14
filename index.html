@@ -1,12 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" style="text/css" href="main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,700,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Document</title>
 </head>
 <body>
-
+    <div class="container">
+        <div class="wrap">
+            <!-- Header -->
+            <div class="header-wrap">
+                <div class="header-left"></div>
+                <div class="header-right">
+                    <h1><span>Weather forecast</span></h1>
+                </div>
+            </div>
+            <!-- Menu -->
+            <div class="menu-wrapper">
+                <ul class="menu">
+                    <li><a>Forecast</a></li>
+                    <li><a>Heatmap</a></li>
+                    <li><a>Cloudmap</a></li>
+                    <li><a>Radar</a></li>
+                    <li><a>Cameras</a></li>
+                    <li><a>Maps</a></li>
+                    <li><a>Community</a></li>
+                </ul>
+            </div>
+            <!-- Forecast card -->
+            <div class="forecast-card">
+                <div class="now">
+                    <div class="city-select-container">
+                        <div class="city-select">New York ></div>
+                    </div>
+                    <div class="whattowear">
+                        <p class="what-to-wear">What to wear today?</p>
+                        <p class="wear">Summer clothes</p>
+                        <a href="#">
+                            <img class="wear-image" src="images/summer-clothes.jpg" alt="Summer clothes">
+                        </a>
+                    </div>
+                </div>
+                <div class="forecast-wrap">
+                    <div class="thirty-six-forecast">
+                        <div class="column separator">
+                            <div class="time-of-day">Tonight</div>
+                            <div class="icon">
+                                <img src="icons/night_half_moon_partial_cloud.svg" alt="">
+                            </div>
+                            <div class="temperature">19C°</div>
+                        </div>
+                        <div class="column">
+                            <div class="time-of-day">Tomorrow morning</div>
+                            <div class="icon">
+                                <img src="icons/day_partial_cloud.svg" alt="">
+                            </div>
+                            <div class="temperature">19C°</div>
+                        </div>
+                        <div class="column">
+                            <div class="time-of-day">Tomorrow noon</div>
+                            <div class="icon">
+                                <img src="icons/day_clear.svg" alt="">
+                            </div>
+                            <div class="temperature">23C°</div>
+                        </div>
+                        <div class="column">
+                            <div class="time-of-day">Tomorrow afternoon</div>
+                            <div class="icon">
+                                <img src="icons/day_rain.svg" alt="">
+                            </div>
+                            <div class="temperature">26C°</div>
+                        </div>
+                        <div class="column separator">
+                            <div class="time-of-day">Tomorrow evening</div>
+                            <div class="icon">
+                                <img src="icons/night_half_moon_rain_thunder.svg" alt="">
+                            </div>
+                            <div class="temperature">19C°</div>
+                        </div>
+                        <div class="column">
+                            <div class="time-of-day">Tomorrow night</div>
+                            <div class="icon">
+                                <img src="icons/night_half_moon_partial_cloud.svg" alt="">
+                            </div>
+                            <div class="temperature">16C°</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
