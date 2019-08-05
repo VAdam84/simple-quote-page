@@ -125,10 +125,11 @@ body {
     text-align: center;
     color: #3498db;
     border: 1px solid #3498db;
-    padding: 2px;
+    padding: 5px;
     font-size: 16px;
     border-radius: 5px;
     line-height: 29px;
+    -webkit-appearance: none;
 }
 
 .whattowear {
