@@ -1,19 +1,19 @@
 let selectedCity = document.querySelector(".city-select").value;
-let url = "http://api.openweathermap.org/data/2.5/weather?q="+selectedCity+"&units=metric&APPID=01d209c46237e2263c0c0bca6b0b317b";
-let urlfor = "https://api.openweathermap.org/data/2.5/forecast?q="+selectedCity+"&units=metric&appid=01d209c46237e2263c0c0bca6b0b317b";
-let urlmap = "https://tile.openweathermap.org/map/temp_new/3/4/4.png?appid=01d209c46237e2263c0c0bca6b0b317b"
-let result = {};
-let resultFor = {};
+let urlWeatherDataByCity = "http://api.openweathermap.org/data/2.5/weather?q="+selectedCity+"&units=metric&APPID=01d209c46237e2263c0c0bca6b0b317b";
+let urlFourteenDaysForecast = "https://api.openweathermap.org/data/2.5/forecast?q="+selectedCity+"&units=metric&appid=01d209c46237e2263c0c0bca6b0b317b";
+let weatherDataByCity = {};
 let maxTemps = document.querySelectorAll(".max-temperature");
 let minTemps = document.querySelectorAll(".min-temperature");
 let dates = document.querySelectorAll(".day-box .date");
 let days = document.querySelectorAll(".day-box .day");
 
+//oldal betöltődésekor kéri le az időjárás adatot a szerverről
+fetch(urlWeatherDataByCity).then(data=>{return data.json()})
+            .then(data=>{ 
+              return weatherDataByCity = data;
+            });
 
-fetch(url).then(data=>{return data.json()})
-          .then(data=>{ return result = data;});
-
-
+//dátumok inicializálása
 function initDates() {
     let now = new Date();
     for(let date of dates) {
@@ -22,6 +22,7 @@ function initDates() {
         now = new Date(now);
     }
 }
+//napok inicializálása
 function initDays() {
     let now = new Date();
     let weekDays = {
@@ -39,33 +40,32 @@ function initDays() {
         now = new Date(now);
     }
 }
+//maximum, minimum hőmérsékletek inicializálása
 function initMaxAndMinTemps() {
     for(let minTemp of minTemps) {
-        minTemp.innerHTML = Math.ceil(result.main.temp_min);
+        minTemp.innerHTML = Math.ceil(weatherDataByCity.main.temp_min);
     }
     for(let maxTemp of maxTemps) {
-        maxTemp.innerHTML = Math.floor(result.main.temp_max);
+        maxTemp.innerHTML = Math.floor(weatherDataByCity.main.temp_max);
     }
 }
 
 $(document).ready(()=>{
-    console.log(selectedCity);
     initDates();
     initDays();
     setTimeout(() => {
         initMaxAndMinTemps();
     }, 1000);
+    //városok kiválasztásánál figyeli a változást és lekéri a városnak megfelelő adatot a szerverről
     $(".city-select").change((e)=>{
         selectedCity = e.target.value; 
         let url = "http://api.openweathermap.org/data/2.5/weather?q="+selectedCity+"&units=metric&APPID=01d209c46237e2263c0c0bca6b0b317b";
-
         fetch(url).then(data=>{return data.json()})
-          .then(data=>{ return result = data;}); 
-        console.log(selectedCity);
+            .then(data=>{ 
+              return weatherDataByCity = data;
+            }); 
         setTimeout(() => {
-            console.log(result);
             initMaxAndMinTemps();
-
         }, 500);
     });
 });
