@@ -3,6 +3,7 @@ let urlWeatherDataByCity = "http://api.openweathermap.org/data/2.5/weather?q="+s
 let urlFiveDaysForecast = "https://api.openweathermap.org/data/2.5/forecast?q="+selectedCity+"&units=metric&appid=01d209c46237e2263c0c0bca6b0b317b";
 let weatherDataByCity = {};
 let weatherForecast = {};
+let container = document.querySelector('.container');
 let maxTemps = document.querySelectorAll(".max-temperature");
 let minTemps = document.querySelectorAll(".min-temperature");
 let dates = document.querySelectorAll(".day-box .date");
@@ -10,6 +11,7 @@ let days = document.querySelectorAll(".day-box .day");
 let icons = document.querySelectorAll(".icon img");
 let dayIcons = document.querySelectorAll(".day-icon img");
 let temperatures = document.querySelectorAll('.temperature');
+let timesOfDay = document.querySelectorAll('.time-of-day');
 let weatherConditions = {
     "01d": "icons/day_clear.svg",
     "01n": "icons/night_full_moon_clear.svg",
@@ -68,10 +70,10 @@ function initDays() {
 //maximum, minimum hőmérsékletek inicializálása
 function initMaxAndMinTemps() {
     for(let minTemp of minTemps) {
-        minTemp.innerHTML = Math.ceil(weatherDataByCity.main.temp_min);
+        minTemp.innerHTML = `${Math.ceil(weatherDataByCity.main.temp_min)}°`;
     }
     for(let maxTemp of maxTemps) {
-        maxTemp.innerHTML = Math.floor(weatherDataByCity.main.temp_max);
+        maxTemp.innerHTML = `${Math.floor(weatherDataByCity.main.temp_max)}°`;
     }
 }
 function fetchforecast(url) {
@@ -86,12 +88,13 @@ function iconsInit() {
     setTimeout(()=>{
         for(let i = 0; i<6; i++) {
             let iconText=weatherForecast[i].weather[0].icon;
+            let time = new Date(weatherForecast[i].dt_txt).getHours();
             icons[i].src = weatherConditions[iconText];
-            temperatures[i].innerHTML = Math.floor(weatherForecast[i].main.temp)+"C°";
-          
+            temperatures[i].innerHTML = `${Math.floor(weatherForecast[i].main.temp)}C°`;
+            timesOfDay[i].innerHTML = `${time}:00`;
         }
-
-    },600);
+        console.log(weatherForecast);
+    },800);
 }
 
 function changeMaxMin() {
@@ -120,13 +123,24 @@ function changeMaxMin() {
         
     }
     for(let i=0; i<mintemps.length; i++) {
-        minTemps[i].innerHTML = mintemps[i];
-        maxTemps[i].innerHTML = maxtemps[i];
+        minTemps[i].innerHTML = `${mintemps[i]}°`;
+        maxTemps[i].innerHTML = `${maxtemps[i]}°`;
     }
     
 }
+function changeBackground() {
+    let now = new Date();
+    if(now.getHours() <=8 ){
+        container.style.backgroundImage = 'url(../images/dawn.jpg)';
+    } else if(now.getHours() < 19 ) {
+        container.style.backgroundImage = 'url(../images/clouds.jpg)';
+    } else {
+        container.style.backgroundImage = 'url(../images/night.jpg)';
+    }
+}
 
 $(document).ready(()=>{
+    changeBackground();
     initDates();
     initDays();
     fetchforecast(urlFiveDaysForecast);

@@ -202,17 +202,19 @@ body {
     display: flex;
 }
 .fourteen .column {
-    width: 47px;
+    width: 20%;
     height: 220px;
     border-right: 1px solid #e1e7eb;
     border-bottom: 1px solid #e1e7eb;
     text-align: center;
-    display: inline-block;
-    position: relative;
-    vertical-align: top;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
 }
 .day-box {
     border-bottom: 1px solid #e1e7eb;
+    width: 100%;
 }
 .day-box .date {
     color: #1D3B55;
@@ -226,32 +228,28 @@ body {
     padding-bottom: 2px;
     text-transform: uppercase;
 }
+.day-icon {
+    margin-top: 10px;
+}
 .day-icon>img {
-    width: 30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
 }
 
 .temp-default {
-    font-size: 15px;
-    color: #ffffff;
-    position: absolute;
-    margin: 0 10px;
-    background-repeat: no-repeat;
-    height: 36px;
-    padding-right: 2px;
+    font-size: 22px;
     font-weight: 900;
-    width: 30px;
-
+    width: 100%;
+    
 }
 .max-temperature {
     margin-top: 18px;
-    padding-top: 3px;
-    background-image: url(../images/idokep_ikon_max_poi.svg);
+    color: #f91414;
+    background-color: #f3642d8f;
 }
 
 .min-temperature {
-    margin-top: 85px;
-    padding-top: 7px;
-    background-image: url(../images/idokep_ikon_min_poi.svg);
-
+    margin-top: 15px;
+    color: #0a0ada;
+    background-color: #2d45f38f;
 }
