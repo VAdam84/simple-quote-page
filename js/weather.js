@@ -1,6 +1,6 @@
 let selectedCity = document.querySelector(".city-select").value;
-let urlWeatherDataByCity = "http://api.openweathermap.org/data/2.5/weather?q="+selectedCity+"&units=metric&APPID=01d209c46237e2263c0c0bca6b0b317b";
-let urlFiveDaysForecast = "https://api.openweathermap.org/data/2.5/forecast?q="+selectedCity+"&units=metric&appid=01d209c46237e2263c0c0bca6b0b317b";
+let urlWeatherDataByCity = `http://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&units=metric&APPID=01d209c46237e2263c0c0bca6b0b317b`;
+let urlFiveDaysForecast = `https://api.openweathermap.org/data/2.5/forecast?q=${selectedCity}&units=metric&appid=01d209c46237e2263c0c0bca6b0b317b`;
 let weatherDataByCity = {};
 let weatherForecast = {};
 let container = document.querySelector('.container');
@@ -12,6 +12,9 @@ let icons = document.querySelectorAll(".icon img");
 let dayIcons = document.querySelectorAll(".day-icon img");
 let temperatures = document.querySelectorAll('.temperature');
 let timesOfDay = document.querySelectorAll('.time-of-day');
+let map;
+let marker;
+let cityData = {};
 let weatherConditions = {
     "01d": "icons/day_clear.svg",
     "01n": "icons/night_full_moon_clear.svg",
@@ -34,11 +37,15 @@ let weatherConditions = {
 }
 
 //oldal betöltődésekor kéri le az időjárás adatot a szerverről
-fetch(urlWeatherDataByCity).then(data=>{return data.json()})
-            .then(data=>{ 
-                console.log(data);
-              return weatherDataByCity = data;
-            });
+function fetchCityData(url) {
+    fetch(url).then(data=>{return data.json()})
+                .then(data=>{ 
+                    console.log(data);
+                  return weatherDataByCity = data;
+                });
+
+}
+fetchCityData(urlWeatherDataByCity);
 
 //dátumok inicializálása
 function initDates() {
@@ -79,7 +86,6 @@ function initMaxAndMinTemps() {
 function fetchforecast(url) {
     fetch(url).then(data=>{return data.json()})
             .then(data=>{ 
-                console.log(data);
               return weatherForecast = data.list;
             });
 }
@@ -93,7 +99,6 @@ function iconsInit() {
             temperatures[i].innerHTML = `${Math.floor(weatherForecast[i].main.temp)}C°`;
             timesOfDay[i].innerHTML = `${time}:00`;
         }
-        console.log(weatherForecast);
     },800);
 }
 
@@ -111,22 +116,36 @@ function changeMaxMin() {
         }
 
     }
-    console.log(minTempsByDay);
     let mintemps = [];
     let maxtemps = [];
     for(let min of minTempsByDay.values()) {
         mintemps.push(Math.floor(Math.min(...min)));
-        
     }
     for(let max of maxTempsByDay.values()) {
         maxtemps.push(Math.floor(Math.max(...max)));
-        
     }
     for(let i=0; i<mintemps.length; i++) {
         minTemps[i].innerHTML = `${mintemps[i]}°`;
         maxTemps[i].innerHTML = `${maxtemps[i]}°`;
     }
     
+}
+function initMap(lat,lng) {
+    map = new google.maps.Map(document.querySelector('#map'), {
+        center: new google.maps.LatLng(lat, lng),
+        zoom: 11
+    });
+    marker = new google.maps.Marker({
+        position: {lat:lat, lng:lng},
+        map: map
+    });
+}
+function setMapCenter(lat,lng) {
+    map.setCenter(new google.maps.LatLng(lat,lng));
+    marker = new google.maps.Marker({
+        position: {lat:lat, lng:lng},
+        map: map
+    });
 }
 function changeBackground() {
     let now = new Date();
@@ -146,22 +165,20 @@ $(document).ready(()=>{
     fetchforecast(urlFiveDaysForecast);
     setTimeout(() => {
         initMaxAndMinTemps();
+        initMap(weatherDataByCity.coord.lat,weatherDataByCity.coord.lon);
     }, 1000);
+    iconsInit();
     //városok kiválasztásánál figyeli a változást és lekéri a városnak megfelelő adatot a szerverről
     $(".city-select").change((e)=>{
         selectedCity = e.target.value; 
         let url = "http://api.openweathermap.org/data/2.5/weather?q="+selectedCity+"&units=metric&APPID=01d209c46237e2263c0c0bca6b0b317b";
         let urlforecast = "https://api.openweathermap.org/data/2.5/forecast?q="+selectedCity+"&units=metric&appid=01d209c46237e2263c0c0bca6b0b317b";
-        console.log(urlforecast);
-        fetch(url).then(data=>{return data.json()})
-        .then(data=>{ 
-            return weatherDataByCity = data;
-        }); 
+        fetchCityData(url);
         fetchforecast(urlforecast);
         setTimeout(() => {
+            setMapCenter(weatherDataByCity.coord.lat,weatherDataByCity.coord.lon);
             iconsInit();
             changeMaxMin();
-        }, 600);
+        }, 700);
     });
-    iconsInit();
 });
