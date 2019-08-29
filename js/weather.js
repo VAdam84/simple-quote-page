@@ -91,15 +91,33 @@ function fetchforecast(url) {
 }
 
 function iconsInit() {
-    setTimeout(()=>{
-        for(let i = 0; i<6; i++) {
-            let iconText=weatherForecast[i].weather[0].icon;
-            let time = new Date(weatherForecast[i].dt_txt).getHours();
-            icons[i].src = weatherConditions[iconText];
-            temperatures[i].innerHTML = `${Math.floor(weatherForecast[i].main.temp)}C°`;
-            timesOfDay[i].innerHTML = `${time}:00`;
+    for(let i = 0; i<6; i++) {
+        let iconText=weatherForecast[i].weather[0].icon;
+        let time = new Date(weatherForecast[i].dt_txt).getHours();
+        icons[i].src = weatherConditions[iconText];
+        temperatures[i].innerHTML = `${Math.floor(weatherForecast[i].main.temp)}C°`;
+        timesOfDay[i].innerHTML = `${time}:00`;
+    }
+}
+
+function dayIconsInit() {
+    let dayIconsPerDay = new Map();
+    for(let i=0; i<weatherForecast.length; i++) {
+        let day = new Date(weatherForecast[i].dt_txt).getDate();
+        if(dayIconsPerDay.has(day)) {
+            dayIconsPerDay.get(day).push(weatherForecast[i].weather[0].icon);
+        } else {
+            dayIconsPerDay.set(day,[]);
         }
-    },800);
+
+    }
+    let icons = [];
+    for(let icon of dayIconsPerDay.values()) {
+        icons.push(icon[0]);
+    }
+    for(let i=0; i<dayIcons.length; i++) {
+        dayIcons[i].src = weatherConditions[icons[i]]; 
+    }
 }
 
 function changeMaxMin() {
@@ -165,9 +183,10 @@ $(document).ready(()=>{
     fetchforecast(urlFiveDaysForecast);
     setTimeout(() => {
         initMaxAndMinTemps();
+        iconsInit();
         initMap(weatherDataByCity.coord.lat,weatherDataByCity.coord.lon);
-    }, 1000);
-    iconsInit();
+        dayIconsInit();
+    }, 700);
     //városok kiválasztásánál figyeli a változást és lekéri a városnak megfelelő adatot a szerverről
     $(".city-select").change((e)=>{
         selectedCity = e.target.value; 
@@ -179,6 +198,9 @@ $(document).ready(()=>{
             setMapCenter(weatherDataByCity.coord.lat,weatherDataByCity.coord.lon);
             iconsInit();
             changeMaxMin();
+        }, 700);
+        setTimeout(() => {
+            dayIconsInit();
         }, 700);
     });
 });
